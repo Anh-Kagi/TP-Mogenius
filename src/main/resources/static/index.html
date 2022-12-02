@@ -7,6 +7,9 @@
 <body>
     <div id="hearts">
     </div>
+    <div id="button">
+        <button onclick="sendHeart()">Send ❤️</button>
+    </div>
     <script>
         function createHeart(color, period, delay) {
             let svgns = "http://www.w3.org/2000/svg";
@@ -25,11 +28,52 @@
             return heart
         }
 
-        document.getElementById("hearts").appendChild(createHeart("red", 70/60, 0));
+        fetch(document.location.protocol+"//"+document.location.host+"/hearts/", {
+            method: "GET"
+        }).then(resp => {
+            resp.json().then(arr => {
+                arr.forEach(h => {
+                    document.getElementById("hearts").appendChild(createHeart(h.color, 70 / 60, 0));
+                });
+            }).catch(e => console.error("cannot run through the data: " + e));
+            }).catch(e => console.error("cannot catch api: " + e));
+
+        function generateShade() {
+            return "#" + (Math.random()/2+0.5).toString(16).slice(2, 8)
+        }
+
+        function sendHeart() {
+            let data = new FormData()
+            data.append("color", generateShade());
+            data.append("rate", ((Math.random() * 20) + 70).toFixed().toString());
+            fetch("/hearts/", {
+                method: "POST", body: data
+            }).then(resp => {
+                document.location.reload();
+            }).catch(e => console.error("cannot catch api: " + e));
+        }
     </script>
     <style>
         body {
             background-color: black;
+        }
+
+        #button {
+            width: 100vw;
+            position: absolute;
+            bottom: 1em;
+            left: 0;
+            right: 0;
+        }
+
+        #button > * {
+            height: 4em;
+            width: 5em;
+            text-align: center;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
         }
 
         #hearts {
@@ -42,8 +86,9 @@
         }
 
         #hearts > * {
-            height: 10em;
-            width: 10em;
+            height: 2em;
+            width: 2em;
+            margin: 0.1em;
 
             animation-name: heartbeat;
             animation-iteration-count: infinite;

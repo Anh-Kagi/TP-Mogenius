@@ -1,6 +1,5 @@
 package fr.polytech.tpmogenius.app.model;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,9 +17,12 @@ public class Heart {
     private byte g;
     private byte b;
 
-    public Heart(String color) {
+    private byte rate;
+
+    public Heart(String color, byte rate) {
         setColor("#f00");
         setColor(color);
+        setRate(rate);
     }
 
     protected Heart() {}
@@ -51,5 +53,13 @@ public class Heart {
 
     public String getColor() {
         return String.format("#%02x%02x%02x", Integer.valueOf(r)+128, Integer.valueOf(g)+128, Integer.valueOf(b)+128);
+    }
+
+    public void setRate(byte rate) {
+        this.rate = rate;
+    }
+
+    public byte getRate() {
+        return rate;
     }
 }

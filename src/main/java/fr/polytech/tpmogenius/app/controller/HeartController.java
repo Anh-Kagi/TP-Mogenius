@@ -23,8 +23,8 @@ public class HeartController {
     }
 
     @PostMapping("/")
-    public Heart create(@RequestParam(required=true) String color) {
-        Heart heart = new Heart(color);
-        return hearts.save(new Heart(color));
+    public Heart create(@RequestParam(required=true) String color, byte rate) {
+        Heart heart = new Heart(color, (byte) Byte.toUnsignedInt(rate));
+        return hearts.save(heart);
     }
 }
